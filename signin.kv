@@ -1,19 +1,36 @@
+<FlatButton@ButtonBehavior+Label>:
+    font_size: 16
+
 <SigninWindow>:
     id: main_win
     orientation: "vertical"
     spacing: 10
     space_x: self.size[0]/3
+    canvas.before:
+        Color:
+            rgba: [1, 1, 1, 1]
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
     BoxLayout:
         size_hint_y: None
         orientation: "horizontal"
+        canvas.before:
+            Color:
+                rgba: [.06, .45, .45, 1]
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
         Label:
             text: "Access Control"
             bold: True
             size_hint_x: .9
-        Button:
+        FlatButton:
             text: "x"
             size_hint_x: .1
+
     BoxLayout:
         orientation: "vertical"
         padding: root.space_x, 10
@@ -37,6 +54,8 @@
             text: "Sign In"
             size_hint_y: None
             height: 40
+            background_color: [.06, .45, .45, 1]
+            background_normal: ''
         Label:
             id: sp2
 
