@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivy.lang import Builder
 
 import re
+# from pymongo import MongoClient
 
 
 from kivystudio import KivyStudio
@@ -13,6 +14,10 @@ class OperatorWindow(MDBoxLayout):
     
     def __init__(self, **kwrags):
         super().__init__(**kwrags)
+        client = MongoClient()
+        self.db = client.silverpos
+        self.stocks = self.db.stocks
+
 
         self.cart = []
         self.qty = []
@@ -21,14 +26,18 @@ class OperatorWindow(MDBoxLayout):
     def update_purchases(self):
         pcode = self.ids.code_inp.text
         products_container = self.ids.products
-        if pcode=='1234' or pcode=='2345':
+
+        target_code = self.stocks.find_one({'product_code': pcode})
+        if target_code==None:
+            pass
+        else:
             details = BoxLayout(size_hint_y=None, height=30, pos_hint={'top': 1})
             
             code = Label(text=pcode, size_hint_x=.2, color=(.06, .45, .45, 1))
-            name = Label(text='Product One', size_hint_x=.3, color=(.06, .45, .45, 1))
+            name = Label(text=target_code['product_name'], size_hint_x=.3, color=(.06, .45, .45, 1))
             qty = Label(text='1', size_hint_x=.1, color=(.06, .45, .45, 1))
             disc = Label(text='0.00', size_hint_x=.1, color=(.06, .45, .45, 1))
-            price = Label(text='0.00', size_hint_x=.1, color=(.06, .45, .45, 1))
+            price = Label(text=target_code['product_price'], size_hint_x=.1, color=(.06, .45, .45, 1))
             total = Label(text='0.00', size_hint_x=.2, color=(.06, .45, .45, 1))
             
             details.add_widget(code)
@@ -41,10 +50,8 @@ class OperatorWindow(MDBoxLayout):
             products_container.add_widget(details)
 
             # Update Preview
-            pname = "Product One"
-            if pcode=='2345':
-                pname = "Product Two"
-            pprice = 1.00
+            pname = name.text
+            pprice = float(price.text)
             pqty = str(1)
             self.total += pprice
             purchase_total = f"`\n\nTotal\t\t\t\t\t\t\t\t{self.total}"
@@ -71,9 +78,17 @@ class OperatorWindow(MDBoxLayout):
             else:
                 self.cart.append(pcode)
                 self.qty.append(1)
+                nu_preview = '\n'.join([prev_text, pname+'\t\tx'+str(pqty)+'\t\t'+str(pprice), purchase_total])
+                preview.text = nu_preview
 
-            nu_preview = '\n'.join([prev_text, pname+'\t\tx'+str(pqty)+'\t\t'+str(pprice), purchase_total])
-            preview.text = nu_preview
+            self.ids.disc_inp.text = '0.00'
+            self.ids.disc_perc_inp.text = '0'
+            self.ids.qty_inp.text = str(pqty)
+            self.ids.price_inp.text = str(pprice)
+            self.ids.vat_inp.text = '15%'
+            self.ids.total_inp.text = str(pprice)
+
+
 
 class OperatorApp(App):
 
@@ -82,7 +97,7 @@ class OperatorApp(App):
 
 
 if __name__ == '__main__':
-    studio = KivyStudio('operator/operator.kv')
-    studio.run()
-    # oa = OperatorApp()
-    # oa.run()
+    # studio = KivyStudio('operator/operator.kv')
+    # studio.run()
+    oa = OperatorApp()
+    oa.run()
