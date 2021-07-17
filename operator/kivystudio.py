@@ -1,7 +1,7 @@
 from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivy.lang import Builder
-
+from kivymd.utils.hot_reload_viewer import HotReloadViewer
 
 KV = '''
 #:import KivyLexer kivy.extras.highlight.KivyLexer
@@ -13,15 +13,14 @@ Screen:
             id: code
             lexer: KivyLexer()
             style_name: "native"
-            size_hint_x: .5
+            size_hint_x: .6
         HotReloadViewer:
-            size_hint_x: .5
+            size_hint_x: .4
             path: app.path_to_kv_file
             errors: True
             errors_text_color: 1, 1, 0, 1
             errors_background_color: app.theme_cls.bg_dark
 '''
-
 
 class KivyStudio(MDApp):
     

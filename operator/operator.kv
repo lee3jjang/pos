@@ -1,9 +1,10 @@
 OperatorWindow:
 
+
 <FlatButton@ButtonBehavior+Label>:
 
 
-<OperatorWindow@MDBoxLayout>:
+<OperatorWindow>:
     id: main_win
 	orientation: "vertical"
 	md_bg_color: (1, 1, 1, 1)
@@ -97,6 +98,9 @@ OperatorWindow:
 				TextInput:
 					id: code_inp
 					size_hint_x: .3
+					multiline: False
+					#on_text_validate: print("dd")
+					on_text_validate: root.update_purchases()
 				TextInput:
 					id: disc_inp
 					size_hint_x: .1
@@ -123,7 +127,7 @@ OperatorWindow:
 
 					Label:
 						text: "Code"
-						size_hint_x: .3
+						size_hint_x: .2
 					Label:
 						text: "Product name"
 						size_hint_x: .3
@@ -138,12 +142,28 @@ OperatorWindow:
 						size_hint_x: .1
 					Label:
 						text: "Product total"
-						size_hint_x: .1
-			BoxLayout:
+						size_hint_x: .2
+				GridLayout:
+					id: products
+					cols: 1
+
 
 		# (Right) Preview
 		BoxLayout:
 			id: preview
 			orientation: "vertical"
 			size_hint_x: .2
+
+			TextInput:
+				id: receipt_preview
+				readonly: True
+				text: "The Collector\n123 Main \nKnowhere, Space\n\nTel: (555)-123-456\nReceipt No: \nDate: \n\n"
+	MDBoxLayout:
+		id: footer
+		size_hint_y: None
+		md_bg_color: (.06, .47, .47, 1)
+		height: 30
+		Label:
+			text: "maintained by samuelworks"
+
 			
